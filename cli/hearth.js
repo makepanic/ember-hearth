@@ -8,12 +8,12 @@ var Datastore = require('nedb'),
   fs = Promise.promisifyAll(require('fs')),
   path = require('path');
 
-const EMBER_BIN = path.join(__dirname, '..', 'node_modules', '.bin', 'ember');
+const EMBER_BIN = path.join(__dirname, '..', 'node_modules', 'ember-cli', 'bin', 'ember');
 
 let processes = {},
   db = {
-  apps: new Datastore({filename: path.resolve(__dirname, 'hearth.nedb.json'), autoload: true})
-};
+    apps: Promise.promisifyAll(new Datastore({filename: path.resolve(__dirname, 'hearth.nedb.json'), autoload: true}))
+  };
 
 function addMetadata(app) {
   // get some app metadata (could probably be cached, but avoids old entries if stored in db on add)
@@ -43,8 +43,8 @@ function addMetadata(app) {
 }
 
 function emitApps(ev) {
-  db.apps.find({}, function (err, apps) {
-    Promise.all(apps.map(doc => addMetadata(doc)))
+  return db.apps.findAsync({}).then((apps) => {
+    return Promise.all(apps.map(doc => addMetadata(doc)))
       .then((apps) => {
         // send jsonapi list of apps
         ev.sender.send('app-list', {
@@ -61,12 +61,13 @@ function emitApps(ev) {
 }
 
 function addApp(ev, appPath) {
-  db.apps.insert({
+  return db.apps.insertAsync({
     id: uuid.v4(),
     path: appPath,
     name: path.basename(appPath)
-  }, function (err, data) {
-    emitApps(ev);
+  }).then((data) => {
+    return emitApps(ev)
+      .then(() => data);
   });
 }
 
@@ -84,9 +85,10 @@ function initApp(ev, app) {
     console.log(`${app.path} stderr: ${data}`);
   });
   ember.on('close', (code) => {
-    ev.sender.send('app-init-end', path);
-    addApp(ev, app.path);
     console.log(`${app.path} child process exited with code ${code}`);
+    addApp(ev, app.path).then((app) => {
+      ev.sender.send('app-init-end', app);
+    });
   });
   ev.sender.send('app-init-start', app);
   processes[app.id] = ember;
