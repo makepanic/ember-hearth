@@ -17,3 +17,5 @@ npm-debug.log
 testem.log
 
 cli/hearth.nedb.json
+hearth.nedb.json
+electron-builds
