@@ -1,33 +1,53 @@
-# Ember Hearth
-Ember Hearth is an application used to manage Ember projects.
+# Ember-hearth
 
-**Warning: Ember Hearth is alpha software and may misbehave.**
+This README outlines the details of collaborating on this Ember application.
+A short introduction of this app could easily go here.
 
-## Goals
-Ember Hearth aspires to allow new users to do all they need to do to run Ember projects without touching the command line.
+## Prerequisites
 
-![Screenshot](http://ember.town/ember-hearth/images/screenshot%200.2.0.png)
+You will need the following things properly installed on your computer.
 
-## Features
-* Installs all needed tools automatically ([node.js](http://nodejs.org), [NPM](http://npmjs.com), [Bower](http://bower.io), [PhantomJS](http://phantomjs.org), [Ember-CLI](http://ember-cli.com))
-* Create new Ember projects
-* Manage existing Ember projects
-* Run a local server
-* Run tests
-* Create development and release builds
+* [Git](http://git-scm.com/)
+* [Node.js](http://nodejs.org/) (with NPM)
+* [Bower](http://bower.io/)
+* [Ember CLI](http://www.ember-cli.com/)
+* [PhantomJS](http://phantomjs.org/)
 
-## Installing
-Go to [ember.town/ember-hearth](http://ember.town/ember-hearth) and download Hearth from there. Double click to extract and move Ember Hearth.app to your Applications folder.
+## Installation
 
-## Contributing
-See [CONTRIBUTING.md](CONTRIBUTING.md)
+* `git clone <repository-url>` this repository
+* change into the new directory
+* `npm install`
+* `bower install`
 
-### Running in Xcode
-1. Clone git project
-2. Run `pod install` in the project folder
-3. Open Ember Hearth.xcworkspace
+## Running / Development
 
-## Troubleshooting
+* `ember server`
+* Visit your app at [http://localhost:4200](http://localhost:4200).
 
-### Node/NPM/Ember-cli is not available in my terminal
-If you're using something else than bash for your shell, the tools installed through Ember Hearth might not be in your path. This can be fixed by adding `export PATH=$HOME/local/bin:$PATH` to your config (for example  `~/.zshrc` for zsh).
+### Code Generators
+
+Make use of the many generators for code, try `ember help generate` for more details
+
+### Running Tests
+
+* `ember test`
+* `ember test --server`
+
+### Building
+
+* `ember build` (development)
+* `ember build --environment production` (production)
+
+### Deploying
+
+Specify what it takes to deploy your app.
+
+## Further Reading / Useful Links
+
+* [ember.js](http://emberjs.com/)
+* [ember-cli](http://www.ember-cli.com/)
+* Development Browser Extensions
+  * [ember inspector for chrome](https://chrome.google.com/webstore/detail/ember-inspector/bmdblncegkenkacieihfhpjfppoconhi)
+  * [ember inspector for firefox](https://addons.mozilla.org/en-US/firefox/addon/ember-inspector/)
+

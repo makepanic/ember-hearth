@@ -1,0 +1,38 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.flex-me {
+  display: flex;
+}
+
+.app-list {
+  flex: 1;
+  background-color: lightgrey;
+}
+
+.app-list ul {
+  list-style: none;
+}
+
+.app-list .status {
+  float: right;
+  margin-right: 1em;
+}
+
+.app-list .status.green {
+  color: green;
+}
+
+.app-show {
+  flex: 2;
+  background-color: white;
+}
+
+.stderr, .stdout{
+  white-space: pre;
+  height: 400px;
+  overflow-y: auto;
+  word-wrap: break-word;
+}
