@@ -17,8 +17,12 @@
               {{#each model as |app|}}
                 {{#link-to 'app.detail' app class='item'}}
                     <div class="ui blue label">{{app.package.version}}</div>
-                  {{#if app.running}}
-                      <div class="ui circular green label" title="running"></div>
+                  {{#if app.starting}}
+                    {{#if app.running}}
+                        <div class="ui circular green label" title="running"></div>
+                    {{else}}
+                        <div class="ui circular yellow label" title="starting"></div>
+                    {{/if}}
                   {{/if}}
                     <i class="icon {{if app.isAddon 'settings' 'desktop'}}"></i>
                   {{app.name}}

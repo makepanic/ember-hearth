@@ -2,6 +2,10 @@ import Ember from 'ember';
 
 const {inject} = Ember;
 
+function isRunning(stdout) {
+  return stdout.indexOf('Serving on') !== -1;
+}
+
 export default Ember.Controller.extend({
   ipc: inject.service(),
   electron: inject.service(),
@@ -19,17 +23,27 @@ export default Ember.Controller.extend({
 
     this.get('ipc').on('app-start', (ev, data) => {
       let project = this.get('store').peekRecord('project', data.id);
-      project.set('running', true);
+      project.set('starting', true);
     });
     this.get('ipc').on('app-close', (ev, data) => {
       let project = this.get('store').peekRecord('project', data.id);
+      project.set('starting', false);
       project.set('running', false);
+    });
+    this.get('ipc').on('app-help', (ev, app, help) => {
+      let project = this.get('store').peekRecord('project', app.id);
+      if (project) {
+        project.set('help', help);
+      }
     });
 
     this.get('ipc').on('app-stdout', (ev, app, data) => {
       if (app.id) {
         let project = this.store.peekRecord('project', app.id);
         if (project) {
+          if (project.get('starting') && !project.get('running') && isRunning(data)) {
+            project.set('running', true);
+          }
           project.get('stdout').pushObject(data);
           project.set('lastStdout', data);
         }

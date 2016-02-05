@@ -1,7 +1,39 @@
 <h2 class="ui header">Actions</h2>
 <div class="ui celled stackable grid">
     <div class="sixteen wide column">
+        <ul>
+          {{#each availableCommands as |cmd|}}
+              <li>
+                {{cmd.name}} (aliases: {{cmd.aliases}})
+                {{cmd.description}}
 
+                  <ul>
+                      {{#each cmd.availableOptions as |opt|}}
+                        <li>{{opt.name}} (def: {{opt.default}})</li>
+                      {{/each}}
+                  </ul>
+
+                  <ul>
+                      {{#each cmd.availableBlueprints as |blueprint|}}
+                        <li>
+                            {{#each-in blueprint as |name bp|}}
+                              <strong>{{name}}</strong>
+                              <ul>
+                                  {{#each bp as |b|}}
+                                      <li>
+                                        {{b.name}}
+                                        {{b.description}}
+                                        {{b.anonymousOptions}}
+                                      </li>
+                                  {{/each}}
+                              </ul>
+                            {{/each-in}}
+                        </li>
+                      {{/each}}
+                  </ul>
+              </li>
+          {{/each}}
+        </ul>
     </div>
 </div>
 

@@ -60,6 +60,31 @@ function emitApps(ev) {
   });
 }
 
+function emitEmberHelp(ev, app){
+  var ember = spawn(EMBER_BIN, ['--help', '--json'], {
+    cwd: path.normalize(app.path),
+    detached: true
+  });
+  let i = 0,
+    data = '';
+
+  ember.stdout.on('data', (stdoutData) => {
+    // ignore ember version header
+    if (i > 0) {
+      data += stdoutData.toString('utf8');
+    }
+    i++;
+    console.log(`${app.path} stdout: ${stdoutData.toString('utf8')}`);
+  });
+  ember.stderr.on('data', (data) => {
+    console.log(`${app.path} stderr: ${data.toString('utf8')}`);
+  });
+  ember.on('close', (code) => {
+    ev.sender.send('app-help', app, JSON.parse(data));
+    console.log(`${app.path} child process exited with code ${code}`);
+  });
+}
+
 function addApp(ev, appPath) {
   return db.apps.insertAsync({
     id: uuid.v4(),
@@ -78,11 +103,11 @@ function initApp(ev, app) {
   });
   ember.stdout.on('data', (data) => {
     ev.sender.send('app-stdout', app, data.toString('utf8'));
-    console.log(`${app.path} stdout: ${data}`);
+    console.log(`${app.path} stdout: ${data.toString('utf8')}`);
   });
   ember.stderr.on('data', (data) => {
     ev.sender.send('app-stderr', app, data.toString('utf8'));
-    console.log(`${app.path} stderr: ${data}`);
+    console.log(`${app.path} stderr: ${data.toString('utf8')}`);
   });
   ember.on('close', (code) => {
     console.log(`${app.path} child process exited with code ${code}`);
@@ -100,11 +125,11 @@ function startApp(ev, app) {
     detached: true
   });
   ember.stdout.on('data', (data) => {
-    ev.sender.send('app-stdout', app, data);
+    ev.sender.send('app-stdout', app, data.toString('utf8'));
     console.log(`${app.name} stdout: ${data}`);
   });
   ember.stderr.on('data', (data) => {
-    ev.sender.send('app-stderr', app, data);
+    ev.sender.send('app-stderr', app, data.toString('utf8'));
     console.log(`${app.name} stderr: ${data}`);
   });
   ember.on('close', (code) => {
@@ -128,6 +153,7 @@ module.exports = {
   initApp,
   stopAllApps,
   stopApp,
+  emitEmberHelp,
   emitApps,
   addApp,
   startApp

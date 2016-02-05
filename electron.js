@@ -47,7 +47,8 @@ var mapping = {
   'hearth-ready': 'emitApps',
   'hearth-start-app': 'startApp',
   'hearth-stop-app': 'stopApp',
-  'hearth-init-app': 'initApp'
+  'hearth-init-app': 'initApp',
+  'hearth-app-help': 'emitEmberHelp'
 };
 
 Object.keys(mapping).forEach((evName) => {
