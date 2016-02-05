@@ -1,9 +1,13 @@
 import Ember from 'ember';
 
-const {inject} = Ember;
+const {inject, computed} = Ember;
 
 export default Ember.Controller.extend({
   ipc: inject.service(),
+
+  isLoading: computed('model.help', function(){
+    return !this.get('model').hasOwnProperty('help');
+  }),
 
   actions: {
     startServer(){
