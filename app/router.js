@@ -6,7 +6,6 @@ const Router = Ember.Router.extend({
 });
 
 Router.map(function() {
-  this.route('project', function() {
     this.route('detail', {path: '/:project_id'}, function() {
       this.route('statistics');
       this.route('actions');
@@ -18,8 +17,6 @@ Router.map(function() {
         this.route('bower');
       });
     });
-    this.route('new');
-  });
 });
 
 export default Router;

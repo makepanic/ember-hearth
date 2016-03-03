@@ -1,5 +1,5 @@
 import Ember from 'ember';
-let bower = requireNode('bower');
+let bower = Ember.K;//requireNode('bower');
 
 const { RSVP } = Ember;
 

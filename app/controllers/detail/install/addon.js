@@ -6,7 +6,7 @@ export default Ember.Controller.extend({
   ipc: inject.service(),
   commander: inject.service(),
   ajax: inject.service(),
-  project: inject.controller('project.detail'),
+  project: inject.controller('detail'),
 
   pageSize: 20,
   page: 0,
@@ -52,7 +52,7 @@ export default Ember.Controller.extend({
     return this.get('addons').slice(0, page * size + size);
   }),
 
-  triggerProjectReload(ev, cmd){
+  triggerProjectReload(ev, {cmd}){
     let command = this.get('store').peekRecord('command', cmd.id);
     if (command.get('succeeded') &&
       ['install', 'uninstall'].indexOf(command.get('name')) !== -1 &&

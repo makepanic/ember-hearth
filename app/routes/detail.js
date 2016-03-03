@@ -6,6 +6,10 @@ export default Ember.Route.extend({
   store: inject.service(),
   commander: inject.service(),
 
+  //beforeModel(){
+  //  debugger;
+  //},
+
   model({project_id}){
     return this.transitionTo('application');
   },

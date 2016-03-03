@@ -4,9 +4,11 @@ const {inject} = Ember;
 
 export default Ember.Route.extend({
   electron: inject.service(),
+  ipc: inject.service(),
 
   model(){
-    return this.store.peekAll('project');
+    const ipc = this.get('ipc');
+    return ipc.ready().then(() => ipc.trigger('hearth-ready'));
   },
 
   actions: {

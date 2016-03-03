@@ -6,11 +6,11 @@ export default Ember.Controller.extend({
   ipc: inject.service(),
   commander: inject.service(),
   ajax: inject.service(),
-  project: inject.controller('project.detail'),
+  project: inject.controller('detail'),
 
   searchResults: [],
 
-  triggerProjectReload(ev, cmd){
+  triggerProjectReload(ev, {cmd}){
     let command = this.get('store').peekRecord('command', cmd.id);
     if (command.get('succeeded') &&
       ['install', 'uninstall'].indexOf(command.get('name')) !== -1 &&

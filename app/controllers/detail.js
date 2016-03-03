@@ -8,10 +8,6 @@ export default Ember.Controller.extend({
   commander: inject.service(),
 
   actions: {
-    removeProject(){
-      this.get('ipc').trigger('hearth-remove-project', this.get('store').serialize(this.get('model'), {includeId: true}));
-      this.transitionToRoute('application');
-    },
     startServer(){
       let store = this.get('store');
       const command = store.createRecord('command', {

@@ -14,36 +14,28 @@ export default Ember.Controller.extend({
     let store = this.get('store');
 
     this.get('ipc').on('project-list', (ev, data) => {
-      // create lookup table for current project list
-      let projects = data.data.reduce((all, project) => {
-        all[project.id] = true;
-        return all;
-      }, {});
-
+      const projectInStore = this.store.peekAll('project').get('length') === 1;
       this.get('store').pushPayload('project', data);
-      // unload all records that aren't in project list
-      this.get('store').peekAll('project')
-        .filter(project => !projects[project.get('id')])
-        .forEach(project => store.unloadRecord(project));
+      if (!projectInStore) {
+        // TODO: prettier, currently only redirect if no project in store
+        this.transitionToRoute('detail', this.store.peekRecord('project', data.data[0].id));
+      }
     });
 
-    this.get('ipc').on('cmd-start', (ev, cmd) => {
+    this.get('ipc').on('cmd-start', (ev, {cmd}) => {
       this.get('store').peekRecord('command', cmd.id)
         .set('running', true);
     });
-    this.get('ipc').on('cmd-stdout', (ev, cmd, data) => {
+    this.get('ipc').on('cmd-stdout', (ev, {cmd, stdout}) => {
       this.get('store').peekRecord('command', cmd.id)
-        .get('stdout').pushObject(data);
+        .get('stdout').pushObject(stdout);
     });
-    this.get('ipc').on('cmd-stderr', (ev, cmd, data) => {
+    this.get('ipc').on('cmd-stderr', (ev, {cmd, stderr}) => {
       this.get('store').peekRecord('command', cmd.id)
-        .get('stderr').pushObject(data);
-    });
-    this.get('ipc').on('open-project', (ev, projectId) => {
-      this.transitionToRoute('project.detail', this.get('store').peekRecord('project', projectId));
+        .get('stderr').pushObject(stderr);
     });
 
-    this.get('ipc').on('cmd-close', (ev, cmd, code) => {
+    this.get('ipc').on('cmd-close', (ev, {cmd, code}) => {
       let command = this.get('store').peekRecord('command', cmd.id);
       command.set('running', false);
       if (code === 0) {
@@ -54,18 +46,5 @@ export default Ember.Controller.extend({
         command.onFail();
       }
     });
-
-    this.get('ipc').trigger('hearth-ready');
-  },
-
-  actions: {
-    addProject(){
-      let dialog = this.get('electron.remote.dialog'),
-        dirs = dialog.showOpenDialog({properties: ['openDirectory']});
-
-      if (dirs.length) {
-        this.get('ipc').trigger('hearth-add-project', dirs[0]);
-      }
-    }
   }
 });
