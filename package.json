@@ -76,7 +76,7 @@
     "extend-info": null,
     "extra-resource": null,
     "helper-bundle-id": null,
-    "icon": null,
+    "icon": "cli/assets/hearth-logo",
     "ignore": null,
     "out": null,
     "osx-sign": {
